@@ -13,31 +13,30 @@ public class RedisClient {
 
             PrintWriter escritor = new PrintWriter(socket.getOutputStream(), true);
             Scanner leitor = new Scanner(socket.getInputStream());
+            Scanner leitorTeclado = new Scanner(System.in);
 
-            System.out.println("> Enviando: SET sessao_pedro usuario_logado");
-            escritor.println("SET sessao_pedro usuario_logado");
-            String resposta = leitor.nextLine();
-            System.out.println("Servidor respondeu: " + resposta);
+            System.out.println("Conectado! Digite comandos (SET key val, GET key, DEL key) ou 'sair' para fechar.");
 
-            System.out.println("\n> Enviando: GET sessao_pedro");
-            escritor.println("GET sessao_pedro");
-            resposta = leitor.nextLine();
-            System.out.println("Servidor respondeu: " + resposta);
+            while (true){
+                System.out.print("> ");
+                String comando = leitorTeclado.nextLine();
 
-            System.out.println("\n> Enviando: DEL sessao_pedro");
-            escritor.println("DEL sessao_pedro");
-            resposta = leitor.nextLine();
-            System.out.println("Servidor respondeu: " + resposta);
+                if (comando.equalsIgnoreCase("sair")) {
+                    break;
+                }
 
-            System.out.println("\n> Enviando: GET sessao_pedro");
-            escritor.println("GET sessao_pedro");
-            resposta = leitor.nextLine();
-            System.out.println("Servidor respondeu: " + resposta);
+                escritor.println(comando);
 
+                if (leitor.hasNextLine()) {
+                    String resposta = leitor.nextLine();
+                    System.out.println("Servidor: " + resposta);
+                }
+            }
             socket.close();
+            System.out.println("Conexão encerrada.");
 
         } catch (IOException e) {
-            System.out.println("Erro crítico no servidor: " + e.getMessage());
+            System.out.println("Erro no cliente: " + e.getMessage());
         }
     }
 }
